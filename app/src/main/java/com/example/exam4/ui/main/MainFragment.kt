@@ -8,11 +8,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.exam4.FLOATING_ACTION_BUTTON_DIALOG
 import com.example.exam4.R
 import com.example.exam4.databinding.FragmentMainBinding
 import com.example.exam4.ui.SharedViewModel
 import com.example.exam4.ui.dialog.AppDialog
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -75,14 +75,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val dialog = AppDialog { firstName, lastName, nationalCode ->
             createUser(firstName, lastName, nationalCode)
         }
-        dialog.show(parentFragmentManager, "floating action button dialog")
+        dialog.show(parentFragmentManager, FLOATING_ACTION_BUTTON_DIALOG)
     }
 
     private fun createUser(firstName: String, lastName: String, nationalCode: String) {
-        if (firstName.isNotBlank() && lastName.isNotBlank() && nationalCode.isNotBlank())
             mainFragmentViewModel.createUserOnServer(firstName, lastName, nationalCode)
-        else
-            Snackbar.make(requireView(), "Please fill all field!", Snackbar.LENGTH_LONG).show()
     }
 
     private fun showDetail(position: Int) {

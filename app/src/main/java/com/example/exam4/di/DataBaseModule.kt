@@ -1,10 +1,9 @@
-package com.example.exam4.date.datamodule
+package com.example.exam4.di
 
 import android.content.Context
 import androidx.room.*
 import com.example.exam4.date.local.AppDataBase
 import com.example.exam4.date.local.UserDao
-import com.example.exam4.date.model.UserListModelItem
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

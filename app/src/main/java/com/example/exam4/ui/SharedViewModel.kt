@@ -1,9 +1,7 @@
 package com.example.exam4.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.exam4.TAG
 import com.example.exam4.date.Repository
 import com.example.exam4.date.model.UserListModelItem
 import com.example.exam4.date.model.UserModel
@@ -45,13 +43,15 @@ class SharedViewModel @Inject constructor(
     }
 
     fun createUserOnServer(firstName: String, lastName: String, nationalCode: String) {
-        launch {
-            val generatedId = repository.createUserOnServer(
-                UserModel(firstName, lastName, nationalCode)
-            )
-            generatedTokenFromServer = generatedId
+        if (firstName.isNotBlank() && lastName.isNotBlank() && nationalCode.isNotBlank()) {
+            launch {
+                val generatedId = repository.createUserOnServer(
+                    UserModel(firstName, lastName, nationalCode)
+                )
+                generatedTokenFromServer = generatedId
+            }
+            getUserListFromServer()
         }
-        getUserListFromServer()
     }
 
     fun getUserListFromServer() {
@@ -80,13 +80,14 @@ class SharedViewModel @Inject constructor(
         lastName: String,
         nationalCode: String
     ) {
-        Log.d(TAG, "editUserInDataBase: $position")
-        val temp = UserListModelItem(
-            userListFromDataBase.value[position]._id, firstName, lastName, nationalCode
-        )
-        launch { repository.createUserOnDataBase(temp) }
+        if (firstName.isNotBlank() && lastName.isNotBlank() && nationalCode.isNotBlank()) {
+            val temp = UserListModelItem(
+                userListFromDataBase.value[position]._id, firstName, lastName, nationalCode
+            )
+            launch { repository.createUserOnDataBase(temp) }
 
-        createUserOnServer(firstName, lastName, nationalCode)
+            createUserOnServer(firstName, lastName, nationalCode)
+        }
     }
 
     private fun ViewModel.launch(fn: suspend () -> Unit) {

@@ -1,4 +1,4 @@
-package com.example.exam4.date.datamodule
+package com.example.exam4.di
 
 import com.example.exam4.date.remote.service.UserApi
 import dagger.Module

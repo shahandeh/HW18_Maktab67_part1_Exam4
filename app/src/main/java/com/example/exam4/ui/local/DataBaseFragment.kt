@@ -10,10 +10,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.exam4.R
+import com.example.exam4.SHOW_DETAIL_DIALOG
 import com.example.exam4.databinding.FragmentDataBaseBinding
 import com.example.exam4.ui.SharedViewModel
 import com.example.exam4.ui.dialog.AppDialog
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -27,14 +27,14 @@ class DataBaseFragment: Fragment(R.layout.fragment_data_base) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentDataBaseBinding.bind(view)
 
-        val recyclerView = DataBaseFragmentAdapter()
+        val adapter = DataBaseFragmentAdapter()
 
-        binding.recyclerViewFragmentDatabase.adapter = recyclerView
+        binding.recyclerViewFragmentDatabase.adapter = adapter
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
                 dataBaseFragment.userListFromDataBase.collect{
-                    recyclerView.submitList(it)
+                    adapter.submitList(it)
                 }
             }
         }
@@ -51,7 +51,7 @@ class DataBaseFragment: Fragment(R.layout.fragment_data_base) {
                     val showDetailDialog = AppDialog{ firstName, lastName, nationalCode ->
                         editUser(position, firstName, lastName, nationalCode)
                     }
-                    showDetailDialog.show(parentFragmentManager, "edit user dialog")
+                    showDetailDialog.show(parentFragmentManager, SHOW_DETAIL_DIALOG)
                     binding.recyclerViewFragmentDatabase.adapter?.notifyItemChanged(position)
                 }
             }
@@ -63,9 +63,6 @@ class DataBaseFragment: Fragment(R.layout.fragment_data_base) {
     }
 
     private fun editUser(position: Int, firstName: String, lastName: String, nationalCode: String){
-        if (firstName.isNotBlank() && lastName.isNotBlank() && nationalCode.isNotBlank())
             dataBaseFragment.editUserInDataBase(position, firstName, lastName, nationalCode)
-        else
-            Snackbar.make(requireView(), "Please fill all field!", Snackbar.LENGTH_LONG).show()
     }
 }
